@@ -1,0 +1,26 @@
+
+C:\ycsb-0.17.0>"C:\Program Files\Amazon Corretto\jdk1.8.0_292\bin\java.exe"  -classpath "C:\ycsb-0.17.0\conf;C:\ycsb-0.17.0\lib\core-0.17.0.jar;C:\ycsb-0.17.0\lib\HdrHistogram-2.1.4.jar;C:\ycsb-0.17.0\lib\htrace-core4-4.1.0-incubating.jar;C:\ycsb-0.17.0\lib\jackson-core-asl-1.9.4.jar;C:\ycsb-0.17.0\lib\jackson-mapper-asl-1.9.4.jar;C:\ycsb-0.17.0\redis-binding\lib\commons-pool2-2.4.2.jar;C:\ycsb-0.17.0\redis-binding\lib\jedis-2.9.0.jar;C:\ycsb-0.17.0\redis-binding\lib\redis-binding-0.17.0.jar" site.ycsb.Client -load -db site.ycsb.db.RedisClient -s -P workloads/redis/workload4 
+[OVERALL], RunTime(ms), 1908
+[OVERALL], Throughput(ops/sec), 524.1090146750524
+[TOTAL_GCS_PS_Scavenge], Count, 0
+[TOTAL_GC_TIME_PS_Scavenge], Time(ms), 0
+[TOTAL_GC_TIME_%_PS_Scavenge], Time(%), 0.0
+[TOTAL_GCS_PS_MarkSweep], Count, 0
+[TOTAL_GC_TIME_PS_MarkSweep], Time(ms), 0
+[TOTAL_GC_TIME_%_PS_MarkSweep], Time(%), 0.0
+[TOTAL_GCs], Count, 0
+[TOTAL_GC_TIME], Time(ms), 0
+[TOTAL_GC_TIME_%], Time(%), 0.0
+[CLEANUP], Operations, 1
+[CLEANUP], AverageLatency(us), 580.0
+[CLEANUP], MinLatency(us), 580
+[CLEANUP], MaxLatency(us), 580
+[CLEANUP], 95thPercentileLatency(us), 580
+[CLEANUP], 99thPercentileLatency(us), 580
+[INSERT], Operations, 1000
+[INSERT], AverageLatency(us), 1828.256
+[INSERT], MinLatency(us), 1422
+[INSERT], MaxLatency(us), 20447
+[INSERT], 95thPercentileLatency(us), 2401
+[INSERT], 99thPercentileLatency(us), 3171
+[INSERT], Return=OK, 1000
