@@ -2,36 +2,91 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import numpy as np
 
-def getInsertFromRawData(rawData):
-    pass
 
-def getReadFromRawData(rawData):
-    pass
-
-def getReadAndUpdateFromRawData(rawData):
-    pass
-
-
-def mariadbLoadData():
+def getInsertFromRawData(dbName):
     insert = []
-    for i in range(9):
-        rawData = getInsertFromRawData(f"./results/mariadb/outputRun_{i+1}")
 
-    for i in range(9):
-        rawData = getReadFromRawData(f"./results/mariadb/outputRun_{i+1}")
+    for i in range(2, 10, 3):
+        insertAux = loadResultsTxt(f"./results/{dbName}/outputRun_{i}")
 
-    for i in range(9):
-        rawData = getReadAndUpdateFromRawData(f"./results/mariadb/outputRun_{i+1}")
+        for j in insertAux:
+            if j.startswith("["):
+                jAux = j.split(",")
+
+                keywords = ["[INSERT]", "RunTime(ms)", "Throughput(ops/sec)"]
+
+                if jAux[0].strip() in keywords or jAux[1].strip() in keywords:
+                    if "Operations" not in jAux[1].strip() and "Return" not in jAux[1].strip():
+                        insert.append(jAux[2].strip())
+
+    return insert
 
 
-def mariadbLoadData():
-    pass
+def getReadFromRawData(dbName):
+    read = []
 
-def postgresqlLoadData():
-    pass
+    for i in range(1, 10, 3):
+        readAux = loadResultsTxt(f"./results/{dbName}/outputRun_{i}")
 
-def redisLoadData():
-    pass
+        for j in readAux:
+            if j.startswith("["):
+                jAux = j.split(",")
+
+                keywords = ["[READ]", "RunTime(ms)", "Throughput(ops/sec)"]
+
+                if jAux[0].strip() in keywords or jAux[1].strip() in keywords:
+                    if "Operations" not in jAux[1].strip() and "Return" not in jAux[1].strip():
+                        read.append(jAux[2].strip())
+
+    return read
+
+
+def getReadHybridFromRawData(dbName):
+    readHybrid = []
+
+    for i in range(3, 10, 3):
+        readHybridAux = loadResultsTxt(f"./results/{dbName}/outputRun_{i}")
+
+        for j in readHybridAux:
+            if j.startswith("["):
+                jAux = j.split(",")
+
+                keywords = ["[READ]", "RunTime(ms)", "Throughput(ops/sec)"]
+
+                if jAux[0].strip() in keywords or jAux[1].strip() in keywords:
+                    if "Operations" not in jAux[1].strip() and "Return" not in jAux[1].strip():
+                        readHybrid.append(jAux[2].strip())
+
+    return readHybrid
+
+
+def getUpdateHybridFromRawData(dbName):
+    updateHybrid = []
+
+    for i in range(3, 10, 3):
+        updateHybridAux = loadResultsTxt(f"./results/{dbName}/outputRun_{i}")
+
+        for j in updateHybridAux:
+            if j.startswith("["):
+                jAux = j.split(",")
+
+                keywords = ["[UPDATE]", "RunTime(ms)", "Throughput(ops/sec)"]
+
+                if jAux[0].strip() in keywords or jAux[1].strip() in keywords:
+                    if "Operations" not in jAux[1].strip() and "Return" not in jAux[1].strip():
+                        updateHybrid.append(jAux[2].strip())
+
+    return updateHybrid
+
+
+def LoadAndTreatData(dbName):
+    insert = getInsertFromRawData(dbName)
+    read = getReadFromRawData(dbName)
+    insertHybrid = getReadHybridFromRawData(dbName)
+    updateHybrid = getUpdateHybridFromRawData(dbName)
+
+    return insert, read, insertHybrid, updateHybrid
+
 
 def updateSheet(sheet, metrics, startLine, endLine, isNewMetric=False):
     minValues = []
@@ -76,13 +131,19 @@ def updateSheet(sheet, metrics, startLine, endLine, isNewMetric=False):
 
         sheet.update_cells(cellList)
 
+
 def loadResultsTxt(fileName):
     fileName = fileName + ".txt"
 
     with open(fileName, 'r') as file:
         return file.readlines()
 
+
 if __name__ == '__main__':
+    mariaDBData = LoadAndTreatData("mariadb")
+    mongoDB = LoadAndTreatData("mongodb")
+    #postGreSql = LoadAndTreatData("postgresql")
+    redis = LoadAndTreatData("redis")
 
     # define the scope
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -96,4 +157,4 @@ if __name__ == '__main__':
     # get the instance of the Spreadsheet
     sheet = client.open_by_key("1_nZLaWe0RleL9vHWVRra3ltOy37VnQJy5SRqrdJNw9c").sheet1
 
-    #updateSheet(sheet, metricsK6, 3, 17)
+    # updateSheet(sheet, metricsK6, 3, 17)
